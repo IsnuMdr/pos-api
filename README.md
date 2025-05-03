@@ -75,9 +75,15 @@ npm run seed
 
 This will create the database, tables, and insert sample products.
 
-🐳 Running with Docker
+💻 Running in Development (without Docker)
 
-### 5. Build and run the containers
+```bash
+npm run dev
+```
+
+## 🐳 Running with Docker
+
+### 1. Build and run the containers
 
 ```bash
 docker-compose up --build
@@ -88,16 +94,10 @@ Docker will start:
 - MySQL database
 - REST API server
 
-### 6. Run Seeder (inside Docker)
+### 2. Run Seeder (inside Docker)
 
 ```bash
 docker-compose exec api npm run seed
-```
-
-💻 Running in Development (without Docker)
-
-```bash
-npm run dev
 ```
 
 Server will start on http://localhost:3000
