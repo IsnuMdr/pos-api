@@ -8,9 +8,9 @@ export class ProductController {
   async getAll(req: Request, res: Response) {
     try {
       const products = await service.getAll();
-      res.json(successResponse(products, "Data products"));
+      return res.json(successResponse(products, "Data products"));
     } catch (error) {
-      res.status(500).json(errorResponse((error as Error).message));
+      return res.status(500).json(errorResponse((error as Error).message));
     }
   }
 
@@ -21,9 +21,9 @@ export class ProductController {
       if (!product) {
         return res.status(404).json(errorResponse("Product not found", 404));
       }
-      res.json(successResponse(product, "Data product"));
+      return res.json(successResponse(product, "Data product"));
     } catch (error) {
-      res.status(500).json(errorResponse((error as Error).message));
+      return res.status(500).json(errorResponse((error as Error).message));
     }
   }
 
@@ -31,9 +31,9 @@ export class ProductController {
     try {
       const { name, price } = req.body;
       const id = await service.create({ name, price });
-      res.status(201).json(successResponse({ id }, "Product created"));
+      return res.status(201).json(successResponse({ id }, "Product created"));
     } catch (error) {
-      res.status(500).json(errorResponse((error as Error).message));
+      return res.status(500).json(errorResponse((error as Error).message));
     }
   }
 
@@ -41,24 +41,37 @@ export class ProductController {
     try {
       const id = Number(req.params.id);
       const { name, price } = req.body;
+
+      const product = await service.getById(id);
+      if (!product) {
+        return res.status(400).json(errorResponse("Product not found"));
+      }
+
       await service.update(id, { name, price });
 
       // get when success updated
-      const product = await service.getById(id);
+      const productUpdated = await service.getById(id);
 
-      res.json(successResponse(product, "Product updated"));
+      return res.json(successResponse(productUpdated, "Product updated"));
     } catch (error) {
-      res.status(500).json(errorResponse((error as Error).message));
+      return res.status(500).json(errorResponse((error as Error).message));
     }
   }
 
   async delete(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
+
+      const product = await service.getById(id);
+
+      if (!product) {
+        return res.status(400).json(errorResponse("Product not found"));
+      }
+
       await service.delete(id);
-      res.json(successResponse(null, "Product deleted"));
+      return res.json(successResponse(null, "Product deleted"));
     } catch (error) {
-      res.status(500).json(errorResponse((error as Error).message));
+      return res.status(500).json(errorResponse((error as Error).message));
     }
   }
 }
