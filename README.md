@@ -61,7 +61,8 @@ Create a .env file based on .env.example:
 DATABASE_HOST=localhost
 DATABASE_USER=root
 DATABASE_PASSWORD=yourpassword
-DATABASE_NAME=products_db
+DATABASE_NAME=pos-app
+DB_PORT=3306
 PORT=3000
 ```
 
