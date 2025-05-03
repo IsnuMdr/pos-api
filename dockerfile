@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:slim
 
 # Set working directory di dalam container
 WORKDIR /app
