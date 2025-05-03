@@ -87,7 +87,7 @@ Docker will start:
 - MySQL database
 - REST API server
 
-### 2. Run Seeder (inside Docker)
+### 6. Run Seeder (inside Docker)
 
 ```bash
 docker-compose exec api npm run seed
