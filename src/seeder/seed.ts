@@ -1,52 +1,49 @@
 import dotenv from "dotenv";
-import mysql from "mysql2/promise";
+import { db } from "../config/database";
 
 dotenv.config();
 
-// Ambil dari environment (Docker / Local)
-const DATABASE_HOST = process.env.DB_HOST;
-const DATABASE_USER = process.env.DB_USER;
-const DATABASE_PASSWORD = process.env.DB_PASSWORD;
-const DATABASE_NAME = process.env.DB_NAME;
-
 async function seed() {
-  const connection = await mysql.createConnection({
-    host: DATABASE_HOST,
-    user: DATABASE_USER,
-    password: DATABASE_PASSWORD,
-  });
+  const dbName = process.env.DB_NAME;
 
-  // 1. Membuat Database jika belum ada
-  await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DATABASE_NAME}\`;`);
-  console.log(`✅ Database '${DATABASE_NAME}' checked/created.`);
+  if (!dbName) {
+    throw new Error("DB_NAME environment variable is not set");
+  }
 
-  // 2. Gunakan database yang sudah dibuat
-  await connection.changeUser({ database: DATABASE_NAME });
+  try {
+    // 1. Membuat Database jika belum ada
+    await db.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
+    console.log(`✅ Database '${dbName}' checked/created.`);
 
-  // 3. Membuat Tabel Products
-  await connection.query(`
-    CREATE TABLE IF NOT EXISTS products (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      price VARCHAR(255) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    );
-  `);
-  console.log(`✅ Table 'products' checked/created.`);
+    // 2. Ganti ke database yang baru dibuat
+    await db.query(`USE \`${dbName}\`;`);
 
-  // 4. Insert Sample Data (optional)
-  await connection.query(`
-    INSERT INTO products (name, price)
-    VALUES 
-      ('Laptop', 1200),
-      ('Smartphone', 800),
-      ('Tablet', 600)
-    ON DUPLICATE KEY UPDATE name = VALUES(name), price = VALUES(price);
-  `);
-  console.log(`✅ Sample data inserted.`);
+    // 3. Membuat Tabel Products
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        price VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      );
+    `);
+    console.log(`✅ Table 'products' checked/created.`);
 
-  await connection.end();
+    // 4. Insert Sample Data (optional)
+    await db.query(`
+      INSERT INTO products (name, price)
+      VALUES 
+        ('Laptop', '1200'),
+        ('Smartphone', '800'),
+        ('Tablet', '600')
+      ON DUPLICATE KEY UPDATE name = VALUES(name), price = VALUES(price);
+    `);
+    console.log(`✅ Sample data inserted.`);
+  } catch (error) {
+    console.error("❌ Error during seeding:", (error as Error).message);
+    throw error;
+  }
 }
 
 seed()
@@ -55,6 +52,6 @@ seed()
     process.exit(0);
   })
   .catch((error) => {
-    console.error("❌ Seeding failed:", error);
+    console.error("❌ Seeding failed:", error.message);
     process.exit(1);
   });

@@ -58,6 +58,7 @@ npm install
 Create a .env file based on .env.example:
 
 ```bash
+NODE_ENV=development
 DATABASE_HOST=localhost
 DATABASE_USER=root
 DATABASE_PASSWORD=yourpassword

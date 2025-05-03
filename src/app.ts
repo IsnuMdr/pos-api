@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import routes from "./routes";
+import { waitForDb } from "./utils/db-check";
 
 dotenv.config();
 
@@ -11,6 +12,17 @@ app.use(express.json());
 
 app.use("/", routes);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+async function startServer() {
+  try {
+    await waitForDb();
+
+    app.listen(port, () => {
+      console.log(`🚀 Server is running on http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", (error as Error).message);
+    process.exit(1);
+  }
+}
+
+startServer();

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { ProductService } from "./services/product.service";
-import { successResponse, errorResponse } from "../../utils/api-response";
+import { ProductService } from "../services/product.service";
+import { successResponse, errorResponse } from "../../../utils/api-response";
 
 const service = new ProductService();
 
