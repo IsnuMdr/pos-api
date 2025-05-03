@@ -15,7 +15,7 @@ COPY . .
 # Build project TypeScript ke JavaScript
 RUN npm run build
 
-EXPOSE 3001
+EXPOSE 3000
 
 # Start aplikasi
 CMD ["npm", "run", "start:prod"]
