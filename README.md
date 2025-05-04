@@ -30,7 +30,6 @@ src/
 ├── routes/           # Combine all module routes
 ├── seeder/           # Database seeder script
 ├── app.ts            # Express app configuration
-├── server.ts         # Entry point to start server
 .env                  # Environment variables
 Dockerfile            # Docker setup
 docker-compose.yml    # Docker Compose for app and database
