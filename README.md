@@ -22,11 +22,11 @@ src/
 ├── config/           # Database connection setup
 ├── modules/
 │ └── product/
-│ ├── controllers/    # Product controllers
-│ ├── services/       # Product services
-│ ├── repositories/   # Product repositories
-│ ├── models/         # Product models
-│ └── routes/         # Product routes
+│   ├── controllers/    # Product controllers
+│   ├── services/       # Product services
+│   ├── repositories/   # Product repositories
+│   ├── models/         # Product models
+│   └── routes/         # Product routes
 ├── routes/           # Combine all module routes
 ├── seeder/           # Database seeder script
 ├── app.ts            # Express app configuration
